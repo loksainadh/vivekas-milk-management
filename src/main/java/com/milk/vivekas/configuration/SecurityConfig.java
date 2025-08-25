@@ -48,7 +48,7 @@ public class SecurityConfig {
 		 * throws Exception { return http .csrf().disable() .authorizeHttpRequests(auth
 		 * -> auth .requestMatchers("/api/users/register").permitAll()
 		 * .anyRequest().authenticated() ) .httpBasic() // instead of formLogin .and()
-		 * .build(); }
+		 * .build(); ee}
 		 */
     
 
