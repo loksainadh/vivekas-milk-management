@@ -18,5 +18,8 @@ public class EmailService {
         message.setText("Hello " + userName + ",\n\nThank you for registering at Vivekas. We're glad to have you!\n\nRegards,\nVivekas Team");
 
         mailSender.send(message);
+        System.out.println("Email Sent");
+
+
     }
 }
