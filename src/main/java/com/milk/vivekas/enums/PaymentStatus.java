@@ -1,6 +1,7 @@
 package com.milk.vivekas.enums;
 
-public enum PaymentStatus {
+public enum
+PaymentStatus {
     PENDING("Payment Pending"),
     PAID("Payment Completed"),
     CANCELLED("Payment Cancelled"),
