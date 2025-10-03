@@ -27,7 +27,9 @@ public class WeatherController {
     public ResponseEntity<WeatherDto> fetchAndSave(@RequestParam String city,
                                                    @RequestParam(required = false) String country) {
         WeatherDto dto = service.fetchAndSave(city, country);
+        System.out.println("loksainadh");
         return ResponseEntity.ok(dto);
+
     }
 
     /**
@@ -39,5 +41,6 @@ public class WeatherController {
                                                           @RequestParam(defaultValue = "50") int limit) {
         List<WeatherEntity> history = service.getHistory(city, limit);
         return ResponseEntity.ok(history);
+
     }
 }
