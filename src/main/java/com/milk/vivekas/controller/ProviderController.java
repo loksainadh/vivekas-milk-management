@@ -1,5 +1,6 @@
 package com.milk.vivekas.controller;
 
+import com.milk.vivekas.dto.ProviderDto;
 import com.milk.vivekas.model.Provider;
 import com.milk.vivekas.model.ProviderProfile;
 import com.milk.vivekas.service.ProviderService;
@@ -34,4 +35,12 @@ public class ProviderController {
     public ResponseEntity<ProviderProfile> saveProfile(@PathVariable Long id, @RequestBody ProviderProfile profile) {
         return ResponseEntity.ok(svc.saveProfile(id, profile));
     }
+
+    @PostMapping("/bulk-upsert")
+    public ResponseEntity<List<Provider>> upsertProviders(@RequestBody List<ProviderDto> providerDtos ) {
+        List<Provider> result = svc.upsertProviders(providerDtos);
+        // Return 200 OK with saved entities. Alternatively, return 201 Created when only creates happened.
+        return ResponseEntity.ok(result);
+    }
+
 }

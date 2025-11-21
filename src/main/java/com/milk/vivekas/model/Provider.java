@@ -1,5 +1,6 @@
 package com.milk.vivekas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.List;
 
@@ -14,13 +15,16 @@ public class Provider {
     private String contactNumber;
 
     @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<User> users;
 
     @OneToMany(mappedBy = "provider", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private List<MilkRecord> milkRecords;
     
  // One Provider ↔ One ProviderProfile
     @OneToOne(mappedBy = "provider", cascade = CascadeType.ALL)
+    @JsonIgnore
     private ProviderProfile profile;
 
 
