@@ -32,6 +32,10 @@ public class UserServiceImpl {
         return userRepository.save(user);
     }
 
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+
     
     public User createUser(User user) {
          
@@ -41,6 +45,8 @@ public class UserServiceImpl {
     
         return userRepository.save(user);
     }
+
+
 
    
     public List<User> getAllUsers() {
