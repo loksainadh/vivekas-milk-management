@@ -1,7 +1,10 @@
 package com.milk.vivekas.controller;
 
+import com.milk.vivekas.dao.UserRepository;
 import com.milk.vivekas.dto.LoginRequest;
 import com.milk.vivekas.dto.RegisterRequest;
+import com.milk.vivekas.exception.BadRequestException;
+import com.milk.vivekas.exception.ResourceNotFoundException;
 import com.milk.vivekas.model.User;
 
 import com.milk.vivekas.service.UserServiceImpl;
@@ -10,7 +13,9 @@ import com.milk.vivekas.utill.JwtUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -36,6 +41,8 @@ public class UserController {
 
     @Autowired
     private JwtUtil jwtUtil;
+
+
     
     
     @PostMapping("/register")
@@ -58,20 +65,29 @@ public class UserController {
         }
         return ResponseEntity.status(401).body("Invalid credentials");
     }
-    
+
 
     @PostMapping("/login")
     public String login(@RequestParam String email, @RequestParam String password) {
-        Authentication authentication = authManager.authenticate(
-                new UsernamePasswordAuthenticationToken(email, password)
-        );
-        if (authentication.isAuthenticated()) {
-            return jwtUtil.generateToken(email);
-        } else {
-            throw new RuntimeException("Invalid credentials");
+        try {
+            Authentication authentication = authManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(email, password)
+            );
+
+            if (authentication.isAuthenticated()) {
+                return jwtUtil.generateToken(email);
+            }
+            throw new BadRequestException("Invalid email or password");
+
+        } catch (BadCredentialsException e) {
+            throw new BadRequestException("Invalid email or password");
+        } catch (UsernameNotFoundException e) {
+            throw new ResourceNotFoundException("User not found with email: " + email);
         }
     }
-  
+
+
+
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user) {
         return ResponseEntity.ok(userService.createUser(user));
