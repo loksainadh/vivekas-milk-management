@@ -4,6 +4,8 @@ package com.milk.vivekas.service;
 import com.milk.vivekas.dao.WeatherRepository;
 import com.milk.vivekas.dto.OpenWeatherResponse;
 import com.milk.vivekas.dto.WeatherDto;
+import com.milk.vivekas.exception.BadRequestException;
+import com.milk.vivekas.exception.ThirdPartyBadResponseException;
 import com.milk.vivekas.model.WeatherEntity;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -45,14 +47,14 @@ public class WeatherService {
         try {
             OpenWeatherResponse response = restTemplate.getForObject(url, OpenWeatherResponse.class);
             if (response == null) {
-                throw new RuntimeException("Empty response from OpenWeather");
+                throw new ThirdPartyBadResponseException("Bad response from OpenWeather API");
             }
 
             WeatherDto dto = toWeatherDto(response);
             saveDto(dto);
             return dto;
         } catch (RestClientException ex) {
-            throw new RuntimeException("Failed to call OpenWeather API: " + ex.getMessage(), ex);
+            throw new ThirdPartyBadResponseException ("Failed to call OpenWeather API: " + ex.getMessage());
         }
     }
 

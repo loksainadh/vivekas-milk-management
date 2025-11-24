@@ -11,6 +11,44 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
+
+    @ExceptionHandler(ThirdPartyTimeoutException.class)
+    public ResponseEntity<ApiError> handleTimeout(ThirdPartyTimeoutException ex,
+                                                  HttpServletRequest request) {
+        ApiError err = new ApiError(
+                HttpStatus.GATEWAY_TIMEOUT.value(),
+                HttpStatus.GATEWAY_TIMEOUT.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(err, HttpStatus.GATEWAY_TIMEOUT);
+    }
+
+    @ExceptionHandler(ThirdPartyAuthException.class)
+    public ResponseEntity<ApiError> handleAuth(ThirdPartyAuthException ex,
+                                               HttpServletRequest request) {
+        ApiError err = new ApiError(
+                HttpStatus.UNAUTHORIZED.value(),
+                HttpStatus.UNAUTHORIZED.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(err, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ThirdPartyBadResponseException.class)
+    public ResponseEntity<ApiError> handleBadResponse(ThirdPartyBadResponseException ex,
+                                                      HttpServletRequest request) {
+        ApiError err = new ApiError(
+                HttpStatus.BAD_GATEWAY.value(), // 502
+                HttpStatus.BAD_GATEWAY.getReasonPhrase(),
+                ex.getMessage(),
+                request.getRequestURI()
+        );
+        return new ResponseEntity<>(err, HttpStatus.BAD_GATEWAY);
+    }
+
+
     // 404 - Resource Not Found
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ApiError> handleNotFound(ResourceNotFoundException ex,
