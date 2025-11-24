@@ -4,6 +4,7 @@ import com.milk.vivekas.dao.MilkRateRepository;
 import com.milk.vivekas.dao.MilkRecordRepository;
 import com.milk.vivekas.dao.ProviderRepository;
 import com.milk.vivekas.dao.UserRepository;
+import com.milk.vivekas.exception.ResourceNotFoundException;
 import com.milk.vivekas.model.MilkRate;
 import com.milk.vivekas.model.MilkRecord;
 import com.milk.vivekas.model.Provider;
@@ -45,7 +46,7 @@ public class MilkRecordService {
 
         // 2) Attach customer / provider / date
         User u = userRepo.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("User not found: " + userId));
+                .orElseThrow(() -> new ResourceNotFoundException("User not found: " + userId));
         rec.setCustomer(u);
 
         if (rec.getProvider() == null && u.getProvider() != null) {
