@@ -2,8 +2,10 @@ package com.milk.vivekas.controller;
 
 
 import com.milk.vivekas.dto.WeatherDto;
+import com.milk.vivekas.exception.TooManyRequestsException;
 import com.milk.vivekas.model.WeatherEntity;
 import com.milk.vivekas.service.WeatherService;
+import io.github.resilience4j.ratelimiter.annotation.RateLimiter;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,6 +25,8 @@ public class WeatherController {
      * Fetch current weather from OpenWeather and save it.
      * Example: GET /api/weather/fetch?city=London&country=uk
      */
+    @RateLimiter(name = "weatherRateLimiter", fallbackMethod = "rateLimitFallback")
+
     @GetMapping("/fetch")
     public ResponseEntity<WeatherDto> fetchAndSave(@RequestParam String city,
                                                    @RequestParam(required = false) String country) {
@@ -30,6 +34,9 @@ public class WeatherController {
         System.out.println("loksainadh");
         return ResponseEntity.ok(dto);
 
+    }
+    public ResponseEntity<WeatherDto> rateLimitFallback(String city,String country, Throwable t) {
+        throw new TooManyRequestsException("Too many requests. Please try again later.");
     }
 
     /**
