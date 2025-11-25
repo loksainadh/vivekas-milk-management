@@ -4,7 +4,7 @@ package com.milk.vivekas.service;
 import com.milk.vivekas.dao.WeatherRepository;
 import com.milk.vivekas.dto.OpenWeatherResponse;
 import com.milk.vivekas.dto.WeatherDto;
-import com.milk.vivekas.exception.BadRequestException;
+
 import com.milk.vivekas.exception.ThirdPartyBadResponseException;
 import com.milk.vivekas.model.WeatherEntity;
 import org.springframework.beans.factory.annotation.Value;
@@ -24,7 +24,6 @@ public class WeatherService {
     private final String openWeatherUrl;
     private final String apiKey;
     private final String units;
-
     public WeatherService(RestTemplate restTemplate,
                           WeatherRepository repository,
                           @Value("${openweathermap.api.url}") String openWeatherUrl,
