@@ -1,8 +1,8 @@
 package com.milk.vivekas.controller;
 
-import com.milk.vivekas.dao.UserRepository;
 import com.milk.vivekas.dto.LoginRequest;
 import com.milk.vivekas.dto.RegisterRequest;
+import com.milk.vivekas.enums.UserRole;
 import com.milk.vivekas.exception.BadRequestException;
 import com.milk.vivekas.exception.ResourceNotFoundException;
 import com.milk.vivekas.model.User;
@@ -10,6 +10,7 @@ import com.milk.vivekas.model.User;
 import com.milk.vivekas.service.UserServiceImpl;
 import com.milk.vivekas.utill.JwtUtil;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -31,6 +32,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/users")
+@Slf4j
 public class UserController {
 
     @Autowired
@@ -51,6 +53,7 @@ public class UserController {
         user.setName(req.getUsername());
         user.setEmail(req.getEmail());
         user.setPassword(req.getPassword());
+        user.setRole(UserRole.ADMIN); // Default role
         userService.registerUser(user);
         return "User registered successfully!";
     }
@@ -95,6 +98,7 @@ public class UserController {
 
     @GetMapping("/retunuserdetails")
     public ResponseEntity<List<User>> getAllUsers() {
+      log.debug("Received request to fetch all users");
         return ResponseEntity.ok(userService.getAllUsers());
     }
 

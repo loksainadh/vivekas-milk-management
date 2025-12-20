@@ -1,10 +1,12 @@
 package com.milk.vivekas.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.milk.vivekas.enums.UserRole;
 import jakarta.persistence.*;
 
 @Entity
 @Table(name = "users")
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class User {
 
     @Id

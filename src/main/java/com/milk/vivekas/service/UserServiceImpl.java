@@ -3,6 +3,7 @@ package com.milk.vivekas.service;
 import com.milk.vivekas.dao.UserRepository;
 import com.milk.vivekas.model.User;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -12,6 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@Slf4j
 public class UserServiceImpl {
 
 	@Autowired
@@ -50,6 +52,7 @@ public class UserServiceImpl {
 
    
     public List<User> getAllUsers() {
+      log.debug("Fetching all users from the database");
         return userRepository.findAll();
     }
 
