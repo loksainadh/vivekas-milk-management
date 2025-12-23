@@ -19,4 +19,3 @@ spec:
           image: loksainadh/vivekas-milk-management:latest
           ports:
             - containerPort: 8080
-          
