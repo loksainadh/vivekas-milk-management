@@ -15,5 +15,6 @@ spec:
       containers:
         - name: vivekas-container
           image: loksainadh/vivekas-milk-management:latest
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
