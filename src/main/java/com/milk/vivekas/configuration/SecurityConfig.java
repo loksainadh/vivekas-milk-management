@@ -28,22 +28,53 @@ public class SecurityConfig {
 	        this.jwtAuthFilter = jwtAuthFilter;
 	    }
 
-	    @Bean
-	    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
-	        return http
-	                .csrf(AbstractHttpConfigurer::disable)
-	                .authorizeHttpRequests(auth -> auth
-	                        .requestMatchers("/api/users/register", "/api/users/login").permitAll()
-	                        .anyRequest().authenticated()
-	                )
-	                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-	                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-	                .build();
-	    }
-	
-	
-	
-		/*
+//	    @Bean
+//	    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+//	        return http
+//	                .csrf(AbstractHttpConfigurer::disable)
+//	                .authorizeHttpRequests(auth -> auth
+//	                        .requestMatchers("/api/users/register", "/api/users/login").permitAll()
+//	                        .anyRequest().authenticated()
+//	                )
+//	                .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+//	                .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+//	                .build();
+//	    }
+@Bean
+public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+
+	http
+			// disable CSRF for APIs (fixes 403 crumb error)
+			.csrf(csrf -> csrf
+					.ignoringRequestMatchers("/api/**")
+			)
+
+			// allow unauthenticated access to login & register
+			.authorizeHttpRequests(auth -> auth
+					.requestMatchers(
+							"/api/users/register",
+							"/api/users/login"
+					).permitAll()
+
+					// everything else requires authentication
+					.anyRequest().authenticated()
+			)
+
+			// stateless JWT session
+			.sessionManagement(session ->
+					session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+			)
+
+			// add JWT filter before UsernamePasswordAuthenticationFilter
+			.addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class);
+
+	return http.build();
+}
+
+
+
+
+	/*
 		 * @Bean public SecurityFilterChain securityFilterChain(HttpSecurity http)
 		 * throws Exception { return http .csrf().disable() .authorizeHttpRequests(auth
 		 * -> auth .requestMatchers("/api/users/register").permitAll()
